@@ -22,6 +22,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 	@IBOutlet weak var addressField: UITextField!
 	@IBOutlet weak var directionsBox: UITextView!
 	@IBOutlet weak var navigationSelector: UISegmentedControl!
+	@IBOutlet weak var refreshButton: UIButton!
 	
 	// Class variables
 	let geo : CLGeocoder = CLGeocoder()
@@ -29,10 +30,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 	var distanceFilter : CLLocationDistance = 10.0
 	var start : CLLocation?
 	
+
+	
 	// MARK: View Lifetime
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
+		
 		
 		// initialize location manager
 		locationManager.delegate = self
@@ -52,9 +56,6 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 		https://developer.apple.com/library/ios/documentation/CoreLocation/Reference/CLLocationManager_Class/index.html#//apple_ref/occ/clm/CLLocationManager/headingAvailable
 		
 		Core Location delivers heading data to your app while it is in the foreground. When your app moves to the background, event delivery stops unless your app has the location-updates background mode enabled and the standard location service is running. You can enable background modes from the Capabilities tab of your Xcode project but should do so only if you can use heading data practically while in the background.
-		
-		
-		Using Location Services in the Background ...
 		*/
 	}
 	
@@ -161,6 +162,14 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 		}
 	}
  
+	@IBAction func refreshLocation(sender: AnyObject) {
+		println("Refreshing.")
+		locationManager.stopMonitoringSignificantLocationChanges()
+		locationManager.stopUpdatingHeading()
+		locationManager.startMonitoringSignificantLocationChanges()
+		locationManager.startUpdatingHeading()
+	}
+	
 	// MARK: CLLocationManagerDelegate Callbacks
 	
 	func locationManager(manager: CLLocationManager!,
@@ -196,12 +205,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 	func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!)	{
 		println("Location Updated")
 		
+		// Last location is most accurate - set current start value
+		// reverse geocode to get readable address string from coordinates
 		if let here : CLLocation = locations.last as? CLLocation {
 			start = here
 			geo.reverseGeocodeLocation(here, completionHandler: { (places:[AnyObject]!, error:NSError!) -> Void in
 				if let placemark = places.first as? CLPlacemark {
 					self.activityView.stopAnimating()
-					self.activityView.hidden = true
 					self.statusLabel.text = ABCreateStringWithAddressDictionary(placemark.addressDictionary, true)
 				}
 			})
