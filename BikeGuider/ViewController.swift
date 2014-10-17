@@ -13,16 +13,16 @@ import AddressBookUI
 import Alamofire
 import SwiftyJSON
 
-class ViewController: UIViewController, CLLocationManagerDelegate {
+class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 	
 	// MARK: Class Members
 	// User interface
 	@IBOutlet weak var statusLabel: UILabel!
 	@IBOutlet weak var activityView: UIActivityIndicatorView!
 	@IBOutlet weak var addressField: UITextField!
-	@IBOutlet weak var directionsBox: UITextView!
 	@IBOutlet weak var navigationSelector: UISegmentedControl!
 	@IBOutlet weak var refreshButton: UIButton!
+	@IBOutlet weak var directionsTable: UITableView!
 	
 	// Class variables
 	let geo : CLGeocoder = CLGeocoder()
@@ -30,13 +30,16 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 	var distanceFilter : CLLocationDistance = 10.0
 	var start : CLLocation?
 	
-
+	// directions
+	var directions : [String] = [String]()
+	
 	
 	// MARK: View Lifetime
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
 		
+//		directionsTable?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "MyProtoCell")
 		
 		// initialize location manager
 		locationManager.delegate = self
@@ -49,6 +52,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 		if CLLocationManager.authorizationStatus() == CLAuthorizationStatus.NotDetermined {
 			locationManager.requestAlwaysAuthorization()
 		}
+		
+		self.directions = ["Searching..."]
+		
+		directionsTable?.rowHeight = UITableViewAutomaticDimension
+
 		
 		/*
 		(To update location / navigation in background)
@@ -79,16 +87,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 	*/
 	@IBAction func generateDirections(sender: AnyObject) {
 		
+		self.directions = ["Searching..."]
+		self.directionsTable.reloadData()
+		
 		// dismiss keyboard
-		addressField.resignFirstResponder()
+		self.addressField.resignFirstResponder()
 		
 		// if user has entered an address into the text field
 		if let addr : String = addressField.text {
 			
 			// update ui on start of search
-			activityView.hidden = false
-			activityView.startAnimating()
-			directionsBox.text = "Searching..."
+			self.activityView.hidden = false
+			self.activityView.startAnimating()
+//			directionsBox.text = "Searching..."
 			
 			// first, geocode the address string to get coordinates
 			geo.geocodeAddressString(addr, completionHandler: { (placemarks:[AnyObject]!, error:NSError!) -> Void in
@@ -99,6 +110,8 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 					// the first location is assumed most accurate
 					if let there : CLPlacemark = placemarks.first as? CLPlacemark {
 //						println(there.location)
+						
+						// TODO: check that start is not nil
 						
 						// Construct parameters for Google API Call, bicycle directions
 						// Uses start and destination coordinates
@@ -133,18 +146,26 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 									// Google api returns html-styled instuctions,
 									// append each direction as html line
 									var directions : String = String()
+									self.directions.removeAll(keepCapacity: false)
 									for (index: String, subJson: JSON) in steps {
 										//Do something you want
 										directions += subJson["html_instructions"].stringValue + "<br />"
+										
+										let attributedDirection = NSMutableAttributedString(data: subJson["html_instructions"].stringValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
+										
+										self.directions.append(attributedDirection.string)
 									}
 									
 									// create attributed string to display html
-									let attributedDirections = NSMutableAttributedString(data: directions.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
+//									let attributedDirections = NSMutableAttributedString(data: directions.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
 									
-									self.directionsBox.attributedText = attributedDirections
+									self.directionsTable.reloadData()
+									
+//									self.directionsBox.attributedText = attributedDirections
 								} else {
 									// Status NOT FOUND
-									self.directionsBox.text = "Not Found."
+//									self.directionsBox.text = "Not Found."
+									self.directions = ["Not Found."]
 								}
 							} else {
 								//object can not be converted to JSON
@@ -154,11 +175,13 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 					}
 				} else {
 					// Can't geolocate from address.
-					self.directionsBox.text = "Not Found. Error: \(error.description)"
+//					self.directionsBox.text = "Not Found. Error: \(error.description)"
+					self.directions = ["Not Found. Error: \(error.description)"]
 				}
 			})
 		} else {
-			directionsBox.text = "No address entered."
+//			directionsBox.text = "No address entered."
+			self.directions = ["No address entered."]
 		}
 	}
  
@@ -168,6 +191,45 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 		locationManager.stopUpdatingHeading()
 		locationManager.startMonitoringSignificantLocationChanges()
 		locationManager.startUpdatingHeading()
+	}
+	
+	// MARK: UITableViewDataSource Callbacks
+	
+	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+		if self.directions.count > 0 {
+			return self.directions.count
+		}
+		return 1
+	}
+	
+	/*
+	func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		return UIView()
+	}
+	*/
+	
+	func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+		let section = indexPath.section
+		
+		var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier("MyProtoCell") as UITableViewCell
+				
+		if self.directions.count > 0 {
+			if var instruction : UILabel = cell.viewWithTag(11) as? UILabel {
+				instruction.text = self.directions[indexPath.row]
+			}
+			
+//			cell.textLabel?.text = self.directions[indexPath.row]
+				//NSMutableAttributedString(data: self.directions[indexPath.row].dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
+		}
+		
+		
+		return cell
+		
+
+	}
+	
+	func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+		return 44
 	}
 	
 	// MARK: CLLocationManagerDelegate Callbacks

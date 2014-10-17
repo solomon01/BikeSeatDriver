@@ -47,12 +47,6 @@
                                     <action selector="generateDirections:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9Tt-6g-xs3"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Directions" translatesAutoresizingMaskIntoConstraints="NO" id="pTU-A7-bDj">
-                                <rect key="frame" x="16" y="180" width="568" height="400"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bx4-cL-9AT">
                                 <rect key="frame" x="198" y="144" width="205" height="29"/>
                                 <segments>
@@ -60,11 +54,11 @@
                                     <segment title="In Background"/>
                                 </segments>
                             </segmentedControl>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="kdT-5I-ggc">
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="kdT-5I-ggc">
                                 <rect key="frame" x="375" y="21" width="20" height="20"/>
                             </activityIndicatorView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Determining Location..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tnX-Xq-AAd">
-                                <rect key="frame" x="16" y="49" width="507" height="21"/>
+                                <rect key="frame" x="77" y="49" width="446" height="21"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <color key="textColor" red="0.1960784314" green="0.30980392159999998" blue="0.52156862749999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -90,19 +84,65 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="rgK-w0-5yI">
+                                <rect key="frame" x="16" y="180" width="568" height="368"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell userInteractionEnabled="NO" tag="55" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="MyProtoCell" id="n9S-8k-rOf">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="n9S-8k-rOf" id="dPF-Py-ZIa">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="compass.png" translatesAutoresizingMaskIntoConstraints="NO" id="4Xq-K0-hqr">
+                                                    <rect key="frame" x="0.0" y="0.0" width="44" height="43"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="44" id="ZNt-bY-5Lk"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qka-Nd-k4i">
+                                                    <rect key="frame" x="52" y="0.0" width="508" height="43"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <attributedString key="attributedText">
+                                                        <fragment>
+                                                            <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                            <attributes>
+                                                                <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="4Xq-K0-hqr" firstAttribute="top" secondItem="dPF-Py-ZIa" secondAttribute="top" id="7q4-yH-37z"/>
+                                                <constraint firstItem="4Xq-K0-hqr" firstAttribute="bottom" secondItem="Qka-Nd-k4i" secondAttribute="bottom" id="7xr-cF-mYS"/>
+                                                <constraint firstItem="4Xq-K0-hqr" firstAttribute="centerY" secondItem="dPF-Py-ZIa" secondAttribute="centerY" id="8bb-gE-csY"/>
+                                                <constraint firstItem="4Xq-K0-hqr" firstAttribute="leading" secondItem="dPF-Py-ZIa" secondAttribute="leading" id="YPz-Hg-MBz"/>
+                                                <constraint firstItem="Qka-Nd-k4i" firstAttribute="leading" secondItem="4Xq-K0-hqr" secondAttribute="trailing" constant="8" symbolic="YES" id="kvB-lj-DXC"/>
+                                                <constraint firstItem="4Xq-K0-hqr" firstAttribute="top" secondItem="Qka-Nd-k4i" secondAttribute="top" id="tfg-cP-lUb"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="GX4-sM-kOA"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Pew-qq-JyT"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="7CA-Aq-hTn" firstAttribute="leading" secondItem="tUp-OH-rIr" secondAttribute="trailing" constant="8" symbolic="YES" id="00l-k3-Yi6"/>
                             <constraint firstItem="ihb-6c-Hbj" firstAttribute="trailing" secondItem="woc-fR-cKB" secondAttribute="trailing" id="1de-4a-enW"/>
-                            <constraint firstAttribute="bottom" secondItem="pTU-A7-bDj" secondAttribute="bottom" constant="20" symbolic="YES" id="2Jr-lf-uXF"/>
                             <constraint firstItem="Gk3-di-0iT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="8g8-Ee-gt7"/>
-                            <constraint firstItem="tnX-Xq-AAd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="AfY-Kf-2AZ"/>
-                            <constraint firstItem="pTU-A7-bDj" firstAttribute="top" secondItem="bx4-cL-9AT" secondAttribute="bottom" constant="8" symbolic="YES" id="BPq-aT-C5r"/>
+                            <constraint firstItem="tnX-Xq-AAd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="61" id="AfY-Kf-2AZ"/>
                             <constraint firstItem="7CA-Aq-hTn" firstAttribute="top" secondItem="tUp-OH-rIr" secondAttribute="top" id="Dvm-si-cwI"/>
-                            <constraint firstItem="tnX-Xq-AAd" firstAttribute="leading" secondItem="woc-fR-cKB" secondAttribute="leading" id="ETh-6c-Dtd"/>
+                            <constraint firstItem="tnX-Xq-AAd" firstAttribute="leading" secondItem="woc-fR-cKB" secondAttribute="leading" constant="61" id="ETh-6c-Dtd"/>
+                            <constraint firstItem="rgK-w0-5yI" firstAttribute="top" secondItem="bx4-cL-9AT" secondAttribute="bottom" constant="8" symbolic="YES" id="Frf-5d-zfQ"/>
                             <constraint firstItem="woc-fR-cKB" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="H0w-oq-kno"/>
-                            <constraint firstItem="tUp-OH-rIr" firstAttribute="leading" secondItem="pTU-A7-bDj" secondAttribute="leading" id="Hgw-bR-1XF"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="rgK-w0-5yI" secondAttribute="bottom" constant="8" symbolic="YES" id="IAG-wb-gRL"/>
                             <constraint firstItem="Gk3-di-0iT" firstAttribute="leading" secondItem="bx4-cL-9AT" secondAttribute="leading" id="IH6-Qq-PG1"/>
                             <constraint firstItem="ihb-6c-Hbj" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="25" id="KcV-DS-ufz"/>
                             <constraint firstItem="woc-fR-cKB" firstAttribute="leading" secondItem="tUp-OH-rIr" secondAttribute="leading" id="Maf-n3-vBc"/>
@@ -110,14 +150,15 @@
                             <constraint firstItem="woc-fR-cKB" firstAttribute="top" secondItem="ihb-6c-Hbj" secondAttribute="bottom" constant="2" id="RCZ-KG-hFF"/>
                             <constraint firstItem="7CA-Aq-hTn" firstAttribute="trailing" secondItem="woc-fR-cKB" secondAttribute="trailing" id="VCo-V3-TUh"/>
                             <constraint firstItem="tnX-Xq-AAd" firstAttribute="top" secondItem="Gk3-di-0iT" secondAttribute="bottom" constant="8" symbolic="YES" id="YEG-Kn-sH5"/>
-                            <constraint firstItem="pTU-A7-bDj" firstAttribute="trailing" secondItem="7CA-Aq-hTn" secondAttribute="trailing" id="auV-1W-Xmc"/>
                             <constraint firstItem="tnX-Xq-AAd" firstAttribute="top" secondItem="kdT-5I-ggc" secondAttribute="bottom" constant="8" symbolic="YES" id="eK8-oG-6ia"/>
                             <constraint firstItem="bx4-cL-9AT" firstAttribute="top" secondItem="tUp-OH-rIr" secondAttribute="bottom" constant="7" id="eOV-rA-74h"/>
                             <constraint firstItem="woc-fR-cKB" firstAttribute="centerX" secondItem="bx4-cL-9AT" secondAttribute="centerX" id="gaZ-VN-O2a"/>
                             <constraint firstItem="kdT-5I-ggc" firstAttribute="leading" secondItem="Gk3-di-0iT" secondAttribute="trailing" constant="8" symbolic="YES" id="iOV-1Y-tTO"/>
                             <constraint firstItem="ihb-6c-Hbj" firstAttribute="leading" secondItem="tnX-Xq-AAd" secondAttribute="trailing" constant="8" symbolic="YES" id="lZN-29-gzb"/>
                             <constraint firstItem="ihb-6c-Hbj" firstAttribute="firstBaseline" secondItem="tnX-Xq-AAd" secondAttribute="baseline" id="mhU-4T-8oa"/>
+                            <constraint firstItem="rgK-w0-5yI" firstAttribute="leading" secondItem="tUp-OH-rIr" secondAttribute="leading" id="qch-Vc-5If"/>
                             <constraint firstItem="ihb-6c-Hbj" firstAttribute="baseline" secondItem="tnX-Xq-AAd" secondAttribute="baseline" id="qeJ-AK-a84"/>
+                            <constraint firstItem="rgK-w0-5yI" firstAttribute="trailing" secondItem="7CA-Aq-hTn" secondAttribute="trailing" id="x6M-WM-6r4"/>
                             <constraint firstItem="kdT-5I-ggc" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="1" id="z58-Lg-ZG4"/>
                         </constraints>
                     </view>
@@ -126,7 +167,7 @@
                     <connections>
                         <outlet property="activityView" destination="kdT-5I-ggc" id="be9-ES-WDg"/>
                         <outlet property="addressField" destination="tUp-OH-rIr" id="P16-pB-cKk"/>
-                        <outlet property="directionsBox" destination="pTU-A7-bDj" id="cAH-MK-kvU"/>
+                        <outlet property="directionsTable" destination="rgK-w0-5yI" id="Sz3-0x-YRp"/>
                         <outlet property="navigationSelector" destination="bx4-cL-9AT" id="hNN-jJ-KPX"/>
                         <outlet property="refreshButton" destination="ihb-6c-Hbj" id="3MN-Fc-mSj"/>
                         <outlet property="statusLabel" destination="tnX-Xq-AAd" id="caS-MO-2Nm"/>
@@ -134,7 +175,10 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="136"/>
+            <point key="canvasLocation" x="139" y="135"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="compass.png" width="900" height="900"/>
+    </resources>
 </document>

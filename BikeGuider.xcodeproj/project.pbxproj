@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E6A04BB519EFAC980026C18F /* compass.png in Resources */ = {isa = PBXBuildFile; fileRef = E6A04BB419EFAC980026C18F /* compass.png */; };
+		E6A04BBD19EFB2ED0026C18F /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A04BBC19EFB2ED0026C18F /* Direction.swift */; };
 		E6E60C5A19E90AC10018E597 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E60C5919E90AC10018E597 /* AppDelegate.swift */; };
 		E6E60C5C19E90AC10018E597 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6E60C5B19E90AC10018E597 /* ViewController.swift */; };
 		E6E60C5F19E90AC10018E597 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E6E60C5D19E90AC10018E597 /* Main.storyboard */; };
@@ -74,6 +76,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E6A04BB419EFAC980026C18F /* compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = compass.png; sourceTree = "<group>"; };
+		E6A04BBC19EFB2ED0026C18F /* Direction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Direction.swift; path = ../Direction.swift; sourceTree = "<group>"; };
 		E6E60C5419E90AC10018E597 /* BikeGuider.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BikeGuider.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6E60C5819E90AC10018E597 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E6E60C5919E90AC10018E597 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +139,7 @@
 				E6E60C9619EB32A00018E597 /* API_KEYS.swift */,
 				E6E60C5919E90AC10018E597 /* AppDelegate.swift */,
 				E6E60C5B19E90AC10018E597 /* ViewController.swift */,
+				E6A04BBC19EFB2ED0026C18F /* Direction.swift */,
 				E6E60C5D19E90AC10018E597 /* Main.storyboard */,
 				E6E60C6019E90AC10018E597 /* Images.xcassets */,
 				E6E60C6219E90AC10018E597 /* LaunchScreen.xib */,
@@ -146,6 +151,7 @@
 		E6E60C5719E90AC10018E597 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E6A04BB419EFAC980026C18F /* compass.png */,
 				E6E60C5819E90AC10018E597 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -310,6 +316,7 @@
 			files = (
 				E6E60C5F19E90AC10018E597 /* Main.storyboard in Resources */,
 				E6E60C6419E90AC10018E597 /* LaunchScreen.xib in Resources */,
+				E6A04BB519EFAC980026C18F /* compass.png in Resources */,
 				E6E60C6119E90AC10018E597 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -331,6 +338,7 @@
 				E6E60C5C19E90AC10018E597 /* ViewController.swift in Sources */,
 				E6E60C5A19E90AC10018E597 /* AppDelegate.swift in Sources */,
 				E6E60C9719EB32A00018E597 /* API_KEYS.swift in Sources */,
+				E6A04BBD19EFB2ED0026C18F /* Direction.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
