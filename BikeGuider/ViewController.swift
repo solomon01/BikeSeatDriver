@@ -23,6 +23,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	@IBOutlet weak var navigationSelector: UISegmentedControl!
 	@IBOutlet weak var refreshButton: UIButton!
 	@IBOutlet weak var directionsTable: UITableView!
+	@IBOutlet weak var compassView: UIImageView!
 	
 	// Class variables
 	let geo : CLGeocoder = CLGeocoder()
@@ -31,7 +32,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	var start : CLLocation?
 	
 	// directions
-	var directions : [String] = [String]()
+	var directions : [Direction] = [Direction]()
 	
 	
 	// MARK: View Lifetime
@@ -53,7 +54,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 			locationManager.requestAlwaysAuthorization()
 		}
 		
-		self.directions = ["Searching..."]
+//		self.directions = ["Searching..."]
 		
 		directionsTable?.rowHeight = UITableViewAutomaticDimension
 
@@ -87,7 +88,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	*/
 	@IBAction func generateDirections(sender: AnyObject) {
 		
-		self.directions = ["Searching..."]
 		self.directionsTable.reloadData()
 		
 		// dismiss keyboard
@@ -151,9 +151,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 										//Do something you want
 										directions += subJson["html_instructions"].stringValue + "<br />"
 										
-										let attributedDirection = NSMutableAttributedString(data: subJson["html_instructions"].stringValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
+										var dir : Direction = Direction()
+										dir.rawInstruction = subJson["html_instructions"].stringValue
 										
-										self.directions.append(attributedDirection.string)
+										self.directions.append(dir)
+										
+//										let attributedDirection = NSMutableAttributedString(data: subJson["html_instructions"].stringValue.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
+//										
+//										self.directions.append(attributedDirection.string)
 									}
 									
 									// create attributed string to display html
@@ -165,7 +170,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 								} else {
 									// Status NOT FOUND
 //									self.directionsBox.text = "Not Found."
-									self.directions = ["Not Found."]
+//									self.directions = ["Not Found."]
 								}
 							} else {
 								//object can not be converted to JSON
@@ -176,12 +181,12 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 				} else {
 					// Can't geolocate from address.
 //					self.directionsBox.text = "Not Found. Error: \(error.description)"
-					self.directions = ["Not Found. Error: \(error.description)"]
+//					self.directions = ["Not Found. Error: \(error.description)"]
 				}
 			})
 		} else {
 //			directionsBox.text = "No address entered."
-			self.directions = ["No address entered."]
+//			self.directions = ["No address entered."]
 		}
 	}
  
@@ -212,14 +217,13 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 		let section = indexPath.section
 		
 		var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier("MyProtoCell") as UITableViewCell
-				
+		
 		if self.directions.count > 0 {
-			if var instruction : UILabel = cell.viewWithTag(11) as? UILabel {
-				instruction.text = self.directions[indexPath.row]
+//			println(self.directions[indexPath.row])
+
+			if var instruction : UITextView = cell.viewWithTag(11) as? UITextView {
+				instruction.attributedText = self.directions[indexPath.row].attributedInstruction
 			}
-			
-//			cell.textLabel?.text = self.directions[indexPath.row]
-				//NSMutableAttributedString(data: self.directions[indexPath.row].dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
 		}
 		
 		
@@ -249,9 +253,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 			case .Authorized:
 				println("Authorized")
 				
-//				locationManager.startUpdatingLocation()
+				locationManager.startUpdatingLocation()
 				// or
-				locationManager.startMonitoringSignificantLocationChanges()
+//				locationManager.startMonitoringSignificantLocationChanges()
 				locationManager.startUpdatingHeading()
 			case .AuthorizedWhenInUse:
 				println("Authorized with in use")
@@ -278,5 +282,14 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 				}
 			})
 		}
+	}
+	
+	// Updates compass view for heading information
+	func locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!) {
+		println("Heading updated.")
+		
+		let degrees : CGFloat = CGFloat(newHeading.magneticHeading * M_PI / 180.0)
+		self.compassView.transform = CGAffineTransformMakeRotation(degrees)
+		
 	}
 }

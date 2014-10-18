@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		if let vc : ViewController = window!.rootViewController as? ViewController {
 			if vc.navigationSelector.selectedSegmentIndex == 0 {
 				vc.locationManager.stopUpdatingLocation()
-				vc.locationManager.stopMonitoringSignificantLocationChanges()
+//				vc.locationManager.stopMonitoringSignificantLocationChanges()
 				vc.locationManager.stopUpdatingHeading()
 				println("stopping updates")
 			}
@@ -43,7 +43,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		
 		// turn on location services on app return
 		if let vc : ViewController = window!.rootViewController as? ViewController {
-			vc.locationManager.startMonitoringSignificantLocationChanges()
+			vc.locationManager.startUpdatingLocation()
+//			vc.locationManager.startMonitoringSignificantLocationChanges()
 			vc.locationManager.startUpdatingHeading()
 			println("starting updates again")
 		}
