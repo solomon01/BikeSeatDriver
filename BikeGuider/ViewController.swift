@@ -287,9 +287,6 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	// Updates compass view for heading information
 	func locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!) {
 		println("Heading updated.")
-		
-		let degrees : CGFloat = CGFloat(newHeading.magneticHeading * M_PI / 180.0)
-		self.compassView.transform = CGAffineTransformMakeRotation(degrees)
-		
+		self.compassView.transform = CGAffineTransformMakeRotation(CGFloat((newHeading.magneticHeading * M_PI) / 180.0))
 	}
 }
