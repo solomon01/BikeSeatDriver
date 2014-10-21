@@ -28,20 +28,29 @@ class Direction {
 	var startCoord : CLLocationCoordinate2D?
 	var endCoord : CLLocationCoordinate2D?
 	var rawInstruction : String?
+	var maneuver : String?
 	
 	lazy var attributedInstruction : NSAttributedString = {
-		let attributed = NSMutableAttributedString(data: self.rawInstruction?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
+		let attrData : NSData? = "<span style=\"font-size: 17\">\(self.rawInstruction!)</span>".dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)
+		let attributed = NSMutableAttributedString(data: attrData!, options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
 //		println("Initialized?")
-		return attributed
+		return attributed!
 	}()
 	
 	var strippedInstruction : String? {
-		return self.attributedInstruction.string
+		return self.attributedInstruction.string.stringByReplacingOccurrencesOfString("\n", withString: ". ", options: NSStringCompareOptions.LiteralSearch, range: nil)
 	}
 	
 	lazy var arrow : Arrow = {
+		var maneuver : String?
+		if let manString : String? = self.maneuver as String? {
+			maneuver = manString
+		} else {
+			maneuver = self.strippedInstruction?
+		}
 		for way in Arrow.allValues {
-			if self.strippedInstruction?.rangeOfString(way.toRaw(), options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil, locale: nil) != nil {
+			println("Searching for way: \(way.rawValue) in man: \(maneuver?)")
+			if maneuver?.rangeOfString(way.rawValue, options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil, locale: nil) != nil {
 				return way
 			}
 		}

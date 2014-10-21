@@ -13,6 +13,9 @@ import AddressBookUI
 import Alamofire
 import SwiftyJSON
 
+let kBGCellImageTag = 7
+let kBGCellLabelTag = 11
+
 class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate {
 	
 	// MARK: Class Members
@@ -24,6 +27,10 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	@IBOutlet weak var refreshButton: UIButton!
 	@IBOutlet weak var directionsTable: UITableView!
 	@IBOutlet weak var compassView: UIImageView!
+	@IBOutlet weak var currentInstructionView: UIView!
+	@IBOutlet weak var currentText: UITextView!
+	@IBOutlet weak var currentArrow: UIImageView!
+	@IBOutlet weak var currentProgress: UIProgressView!
 	
 	// Class variables
 	let geo : CLGeocoder = CLGeocoder()
@@ -131,7 +138,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 							self.activityView.stopAnimating()
 							
 							// parse if response is well-formed json
-							if let json = JSON.fromRaw(jsonData!) {
+							if let json = JSON(rawValue: jsonData!) {
 								//object can be converted to JSON
 								
 								println("Request: \(request.description)")
@@ -153,6 +160,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 										
 										var dir : Direction = Direction()
 										dir.rawInstruction = subJson["html_instructions"].stringValue
+										dir.maneuver = subJson["maneuver"].stringValue
 										
 										self.directions.append(dir)
 										
@@ -164,7 +172,11 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 									// create attributed string to display html
 //									let attributedDirections = NSMutableAttributedString(data: directions.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true), options: [NSDocumentTypeDocumentAttribute : NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute : NSUTF8StringEncoding], documentAttributes: nil, error: nil)
 									
+									
+									self.setCurrentInstructionView()
+									
 									self.directionsTable.reloadData()
+									
 									
 //									self.directionsBox.attributedText = attributedDirections
 								} else {
@@ -198,18 +210,54 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 		locationManager.startUpdatingHeading()
 	}
 	
+	@IBAction func instructionCompleted(sender: AnyObject) {
+		if self.directions.count > 0 {
+			self.directions.removeAtIndex(0)
+			self.setCurrentInstructionView()
+			self.directionsTable.reloadData()
+		}
+	}
+	
+	func setCurrentInstructionView() {
+		if let current : Direction = self.directions.first {
+			self.currentProgress.hidden = false
+			self.currentText.attributedText = current.attributedInstruction
+			self.currentArrow.image = UIImage(named: current.arrow.rawValue)
+			//			return self.currentInstructionView
+		}
+	}
+	
 	// MARK: UITableViewDataSource Callbacks
 	
 	func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		if self.directions.count > 0 {
-			return self.directions.count
+			return self.directions.count - 1
 		}
-		return 1
+		return 0
 	}
 	
 	/*
 	func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-		return UIView()
+		
+		println("Section: \(section)")
+
+		
+		let header = UIView(frame: CGRectMake(0, 0, self.directionsTable.frame.width, 90))
+		header.backgroundColor = UIColor.lightGrayColor()
+		self.currentArrow.frame = CGRectMake(8, 8, 74, 74)
+		
+		if let current : Direction = self.directions.first {
+			self.currentText.attributedText = current.attributedInstruction
+			self.currentArrow.image = UIImage(named: current.arrow.rawValue)
+//			return self.currentInstructionView
+		}
+		
+		return header
+	}
+
+	func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//		println("Section: \(section)")
+		return self.currentInstructionView.frame.size.height
 	}
 	*/
 	
@@ -218,11 +266,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 		
 		var cell : UITableViewCell = tableView.dequeueReusableCellWithIdentifier("MyProtoCell") as UITableViewCell
 		
+		
 		if self.directions.count > 0 {
-//			println(self.directions[indexPath.row])
+			let direction : Direction = self.directions[indexPath.row + 1]
 
-			if var instruction : UITextView = cell.viewWithTag(11) as? UITextView {
-				instruction.attributedText = self.directions[indexPath.row].attributedInstruction
+//			println(direction.strippedInstruction)
+			
+			if let instruction : UILabel = cell.viewWithTag(kBGCellLabelTag) as? UILabel {
+				instruction.text = direction.strippedInstruction
+			}
+			
+			if let arrow : UIImageView = cell.viewWithTag(kBGCellImageTag) as? UIImageView {
+				arrow.image = UIImage(named: direction.arrow.rawValue)
 			}
 		}
 		
@@ -286,7 +341,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
 	
 	// Updates compass view for heading information
 	func locationManager(manager: CLLocationManager!, didUpdateHeading newHeading: CLHeading!) {
-		println("Heading updated.")
-		self.compassView.transform = CGAffineTransformMakeRotation(CGFloat((newHeading.magneticHeading * M_PI) / 180.0))
+//		println("Heading updated.")
+		self.compassView.transform = CGAffineTransformMakeRotation(CGFloat(-(newHeading.magneticHeading * M_PI) / 180.0))
 	}
 }
