@@ -1,0 +1,54 @@
+// project data structure
+//messages from and to the bluetooth would be maximum 20 bytes per message
+//bluetooth would get the following data direction(right, left, forward), compass, speed
+
+// this is how the data is transferred (source data sheet for nRF8001 )
+The following procedure is performed when the application controller sends a command to nRF8001:
+1. The application controller requests the right to send data by setting the REQN pin to ground.
+2. nRF8001 sets the RDYN pin to ground when it is ready to receive data.
+3. The application controller starts sending data on the MOSI pin:
+• Byte 1 (length byte) from the application controller defines the length of the message.
+• Byte 2 (ACI byte1) is the first byte of the ACI data.
+• Byte N is the last byte of the ACI data.
+• The application controller sets the REQN pin high to terminate the data transaction.
+Note: The maximum length of a command packet is 32 bytes, including the length byte. MOSI shall 
+be held low if the application controller receives an event and has no message to send to the 
+nRF8001.
+
+//this is the tentative structure and definitions for bluetooth messages.
+//one byte for the compass
+compass
+				//8 possible directions
+		0x00		north north (full north)
+		0x01		north east
+		0x03		north west
+		0x22		south south (full south)
+		0x21		south east 
+		0x23		south west
+		0x11		east east (full east)
+		0x33		west west (full west)
+		
+//one byte for the direction and turns
+directions 
+				//four possible direction indicators
+		0x00		forward
+		0x11		backward (could be usually given as make a U tern in the GPS module)
+			
+					right: there are three direction indicators that could be considered as right
+		0x20				Sharp right ( greater than 90 degree right)
+		0x21				regular right (approximately 90 degree right)
+		0x22				slight right (less than 90 degree right)
+					left: there are three direction indicators that could be considered as left
+		0x30				Sharp left ( greater than 90 degree left)
+		0x31				regular left (approximately 90 degree left)
+		0x32				slight left (less than 90 degree left)
+
+
+//two bits for the speed(if it is decimal, 2nd lsb nibble becomes 1)
+speed 
+	speed can be 
+		0X0010		single digit (less than 10)
+		0x0000 		double digit if greater than or equal to 10
+	
+//
+//
